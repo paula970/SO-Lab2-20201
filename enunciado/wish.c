@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -6,15 +5,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-// const char *mypath[] = {
-//   "./",
-//   "/usr/bin/",
-//   "/bin/",
-//   NULL
-// };
-
 int main(int argc, char *argv[])
 {
+    char *mypath[] = {
+        "./",
+        "/usr/bin/",
+        "/bin/",
+        NULL};
+
     char error_message[30] = "An error has occurred\n";
 
     //Modo interactivo
@@ -55,50 +53,66 @@ int main(int argc, char *argv[])
                 char *arguments2[100];
                 for (int j = 0; (word2 = strsep(&arguments[i], " ")) != NULL; j++)
                 {
-                    if (j == 0 && i == 0)
+
+                    arguments2[j] = word2;
+                    arguments2[j + 1] = NULL;
+                };
+                if (i == 0)
+                {
+
+                    // EXIT
+                    if (strcmp(arguments2[0], "exit") == 0)
                     {
-                        // EXIT
-                        if (strcmp(word2, "exit") == 0)
-                            {
-                                exit(0);
-                            };
-                        // CD
-                        if (strcmp(word2, "cd") == 0)
-                        {
-                            word2 = strsep(&arguments[i], " ");
-                            if (chdir(word2) == -1)
-                            {
-                                write(STDERR_FILENO, error_message, strlen(error_message));
-                            }
-                            else
-                            {
-                                char s[100];
-                                printf("Ubicación después de CD: %s\n", getcwd(s, 100));
-                            }
-                        };
-                        //PATH
-                        if (strcmp(word2, "path") == 0)
-                        {
-                            printf("path");
-                        };
+                        exit(0);
+                        break;
                     };
-                    arguments2[i] = word2;
-                    arguments2[i + 1] = NULL;
+                    // CD
+                    if (strcmp(arguments2[0], "cd") == 0)
+                    {
+
+                        if (chdir(arguments2[1]) == -1)
+                        {
+                            write(STDERR_FILENO, error_message, strlen(error_message));
+                        }
+                        else
+                        {
+                            char s[100];
+                            printf("Ubicación después de CD: %s\n", getcwd(s, 100));
+                        }
+                        break;
+                    };
+                    //PATH
+                    if (strcmp(arguments2[0], "path") == 0)
+                    {
+
+                        for (int k = 1; arguments2[k] != NULL; k++)
+                        {
+                            mypath[k - 1] = arguments2[k];
+                            mypath[k] = NULL;
+                        }
+
+                        break;
+                    };
+                };
+
+                for (int j = 0; mypath[j] != NULL; j++)
+                {
+                    char *path = strdup(mypath[j]);
+                    strcat(path, arguments2[0]);
+
+                    if (access(path, F_OK) == 0)
+                    {
+                        printf("%s \n", path);
+                        if(fork()==0){
+                            execv(path,arguments2);
+                            return (0);
+                        };
+                        wait(NULL);
+                        break;
+                    };
                 };
             };
-
-            /* If necessary locate executable using mypath array */
-            /* Launch executable */
-            // if (fork () == 0) {
-            //     ...
-            //     execv (...);
-            //     ...
-            // }
-            // else
-            // {
-            //     wait (...);
-            // }
-        }
+        };
     };
 
     /* Modo batch */
