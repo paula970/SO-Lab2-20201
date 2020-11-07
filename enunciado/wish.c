@@ -40,8 +40,16 @@ int main(int argc, char *argv[])
             char *arguments[100];
             for (int i = 0; (word = strsep(&line, "&")) != NULL; i++)
             {
-                arguments[i] = word;
-                arguments[i + 1] = NULL;
+                if (strcmp(word, "") != 0)
+                {
+                    arguments[i] = word;
+                    arguments[i + 1] = NULL;
+                }
+                else
+                {
+                    i = i - 1;
+                };
+
             };
 
             //Recorrer los comandos
@@ -53,9 +61,15 @@ int main(int argc, char *argv[])
                 char *arguments2[100];
                 for (int j = 0; (word2 = strsep(&arguments[i], " ")) != NULL; j++)
                 {
-
-                    arguments2[j] = word2;
-                    arguments2[j + 1] = NULL;
+                    if (strcmp(word2, "") != 0)
+                    {
+                        arguments2[j] = word2;
+                        arguments2[j + 1] = NULL;
+                    }
+                    else
+                    {
+                        j = j - 1;
+                    };
                 };
                 if (i == 0)
                 {
@@ -102,9 +116,9 @@ int main(int argc, char *argv[])
 
                     if (access(path, F_OK) == 0)
                     {
-                        printf("%s \n", path);
-                        if(fork()==0){
-                            execv(path,arguments2);
+                        if (fork() == 0)
+                        {
+                            execv(path, arguments2);
                             return (0);
                         };
                         wait(NULL);
