@@ -57,10 +57,12 @@ int main(int argc, char *argv[])
                 {
                     if (j == 0 && i == 0)
                     {
+                        // EXIT
                         if (strcmp(word2, "exit") == 0)
                             {
                                 exit(0);
                             };
+                        // CD
                         if (strcmp(word2, "cd") == 0)
                         {
                             word2 = strsep(&arguments[i], " ");
@@ -74,6 +76,7 @@ int main(int argc, char *argv[])
                                 printf("Ubicación después de CD: %s\n", getcwd(s, 100));
                             }
                         };
+                        //PATH
                         if (strcmp(word2, "path") == 0)
                         {
                             printf("path");
