@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
             char *arguments[100];
             for (int i = 0; (word = strsep(&line, "&")) != NULL; i++)
             {
-                if (strcmp(word, "") != 0)
+                if (strcmp(word, "") != 0 && strcmp(word, "\t") != 0)
                 {
                     arguments[i] = word;
                     arguments[i + 1] = NULL;
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
                 char *arguments2[100];
                 for (int j = 0; (word2 = strsep(&arguments[i], " ")) != NULL; j++)
                 {
-                    if (strcmp(word2, "") != 0)
+                    if (strcmp(word2, "") != 0 && strcmp(word2, "\t") != 0)
                     {
                         arguments2[j] = word2;
                         arguments2[j + 1] = NULL;
