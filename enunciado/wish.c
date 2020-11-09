@@ -60,6 +60,31 @@ int main(int argc, char *argv[])
                 char *word3;
                 char *arguments2[100];
 
+                int error = 0;
+                char *args = strdup(arguments[i]);
+                //char *file[2];
+                for (int j = 0; (word2 = strsep(&args, ">")) != NULL; j++)
+                {
+                    if (j == 0)
+                    {
+                        arguments[i] = word2;
+                    }
+                    else if (j == 1)
+                    {
+                        //file[0] = strdup(word2);
+                    }
+                    else
+                    {
+                        error = 1;
+                        break;
+                    }
+                }
+
+                if (error == 1)
+                {
+                    write(STDERR_FILENO, error_message, strlen(error_message));
+                    break;
+                }
                 //Quito los espacios
                 for (int j = 0; (word2 = strsep(&arguments[i], " ")) != NULL; j++)
                 {
@@ -92,6 +117,7 @@ int main(int argc, char *argv[])
                         else
                         {
                             write(STDERR_FILENO, error_message, strlen(error_message));
+                            break;
                         }
                     };
                     // CD
