@@ -1,4 +1,6 @@
-ls 
-ls -la 
-ls	-la 
-ls -la 
+ls
+ls -la
+cd tests
+ls
+cd ..
+ls

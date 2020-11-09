@@ -150,23 +150,26 @@ int main(int argc, char *argv[])
             printf("wunzip: cannot open file\n");
             exit(1);
         };
+        FILE *fp2 = fopen(argv[1], "r");
 
         char *line = NULL;
         size_t len = 0;
         ssize_t read;
 
+        char *line2 = NULL;
+        size_t len2 = 0;
+        ssize_t read2;
+        read2 = getline(&line2, &len2, fp2);
+
         //Leemos por linea del archivo
         while ((read = getline(&line, &len, fp)) != -1)
         {
-            char c1[2];
-            c1[0] = line[strlen(line) - 1];
-            c1[1] = line[strlen(line) - 2];
-
-            if (strcmp(c1, "\r\n") != 0)
+            if ((read2 = getline(&line2, &len2, fp2)) != -1)
             {
                 line[strlen(line) - 1] = '\0';
-                line[strlen(line) - 2] = '\0';
-            }
+                // line[strlen(line) - 2] = '\0';
+            };
+            printf("ATRAS %s ADELANTE \n", line);
 
             //Guardar cada comando en una matriz
             char *word;
@@ -223,7 +226,6 @@ int main(int argc, char *argv[])
                     // CD
                     if (strcmp(arguments2[0], "cd") == 0)
                     {
-
                         if (chdir(arguments2[1]) == -1)
                         {
                             write(STDERR_FILENO, error_message, strlen(error_message));
@@ -269,6 +271,9 @@ int main(int argc, char *argv[])
                 };
             };
         };
+        fclose(fp);
+        fclose(fp2);
+        return (1);
     };
 
     //Mando algo erroneo
