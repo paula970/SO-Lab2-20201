@@ -1,0 +1,4 @@
+ls 
+ls -la 
+ls	-la 
+ls -la 
